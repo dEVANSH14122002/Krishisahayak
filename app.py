@@ -104,7 +104,7 @@ def determine_status(predicted_status, temperature, humidity, moisture_percentag
 
 @app.route('/')
 def index():
-    return render_template('index1.html')
+    return render_template('index.html')
 
 @app.route('/read_sensor', methods=['POST'])
 def read_sensor():
@@ -185,7 +185,7 @@ def read_sensor():
     # Determine status based on predicted health status and sensor values
     status = determine_status(predicted_health_status_label, temperature, humidity, moisture_percentage)
 
-    return render_template('index1.html', predicted_status=predicted_health_status_label,
+    return render_template('index.html', predicted_status=predicted_health_status_label,
                        temperature=temperature, humidity=humidity, moisture_percentage=moisture_percentage,
                        temperature_status=status['temperature_status'],
                        humidity_status=status['humidity_status'],
