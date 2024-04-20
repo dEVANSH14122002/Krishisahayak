@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if predicted_status %}Result{% else %}Read Sensor Values{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        img {
+            display: block;
+            margin-top: 20px;
+            max-width: 100%;
+        }
+
+        .sensor-info {
+            margin-top: 20px;
+        }
+
+        .sensor-info h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .status.high {
+            color: red;
+        }
+
+        .status.normal {
+            color: green;
+        }
+
+        .status.unknown {
+            color: gray;
+        }
+
+        .solutions {
+            margin-top: 20px;
+        }
+
+        .solutions h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .solutions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .solutions ul li {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <!-- Google Translate Element -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+    <!-- Google Translate Element will be embedded here -->
+    <div id="google_translate_element"></div>
+
+    <div class="container">
+        {% if predicted_status %}
+        <h1>Predicted Health Status:</h1>
+        <p>{{ predicted_status }}</p>
+        <!-- Display the generated plot -->
+        <img src="{{ url_for('static', filename='sensor_plot.png') }}" alt="Sensor Plot">
+        {% else %}
+        <h1>Read Sensor Values</h1>
+        <form action="/read_sensor" method="post">
+            <input type="submit" value="Read Sensor">
+        </form>
+        {% endif %}
+
+        <!-- Display temperature, humidity, and moisture percentage values -->
+        <div class="sensor-info">
+            {% if temperature is not none %}
+            <h2>Temperature: {{ temperature }}</h2>
+            <p class="status {{ temperature_status|lower }}">{{ temperature_status }}</p>
+            {% endif %}
+            {% if humidity is not none %}
+            <h2>Humidity: {{ humidity }}</h2>
+            <p class="status {{ humidity_status|lower }}">{{ humidity_status }}</p>
+            {% endif %}
+            {% if moisture_percentage is not none %}
+            <h2>Moisture Percentage: {{ moisture_percentage }}</h2>
+            <p class="status {{ moisture_percentage_status|lower }}">{{ moisture_percentage_status }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Display solutions for the predicted health status -->
+        <div class="solutions">
+            {% if solutions %}
+            <h2>Solutions:</h2>
+            <ul>
+                {% for solution in solutions %}
+                <li>{{ solution }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
